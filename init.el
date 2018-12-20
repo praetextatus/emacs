@@ -9,21 +9,17 @@
 (global-hl-line-mode 1)
 (show-paren-mode 1)
 
-;; fonts
-(add-to-list 'default-frame-alist '(font . "Droid Sans Mono-12"))
-
-
-;; printing settings
-(setq printer-name "Deskjet-F2200-series")
-(global-set-key [?\C-c ?\C-p] 'print-buffer)
-
 ;; coding style
 (setq-default c-default-style "ellemtel"
       c-basic-offset 4
       tab-width 4
       tab-indent-mode t)
 (defvaralias 'c-basic-offset 'tab-width)
-
+(add-hook 'python-mode-hook
+      (lambda ()
+        (setq indent-tabs-mode t)
+        (setq tab-width 2)
+        (setq python-indent-offset 2)))
 
 ;; hook for c++ mode
 (defun my-c++-mode-hook ()
@@ -34,27 +30,37 @@
   (auto-complete-mode))
 (add-hook 'c++-mode-hook 'my-c++-mode-hook)
 
-
 ;; treat .h files as c++ 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
-
-
 ;; special keys
 (global-set-key "\C-cl" 'goto-line)
 
+;; packages
+(require 'package)
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (proto (if no-ssl "http" "https")))
+  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
+  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+  (when (< emacs-major-version 24)
+    ;; For important compatibility libraries like cl-lib
+    (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
+(package-initialize)
+
+(setq custom-package-list '(github-modern-theme elpy company))
+(unless package-archive-contents
+  (package-refresh-contents))
+; install the missing packages
+(dolist (package custom-package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
+;; color theme -- github-modern
 (when (>= emacs-major-version 24)
-  (require 'package)
-  (package-initialize)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t))
+  (load-theme 'github-modern t))
 
-
-;; color theme -- tango
-(when (>= emacs-major-version 24)
-  (load-theme 'tango t))
-
-
-
-
+(elpy-enable)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -62,6 +68,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(inhibit-startup-screen t)
+ '(package-selected-packages (quote (melancholy-theme elpy company github-modern-theme)))
  '(safe-local-variable-values (quote ((tab-indent-mode . t)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -69,3 +76,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
