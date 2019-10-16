@@ -36,6 +36,7 @@
 (add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode))
 ;; special keys
 (global-set-key "\C-cl" 'goto-line)
+(global-set-key (kbd "C-x g") 'magit-status)
 
 ;; packages
 (require 'package)
@@ -44,13 +45,13 @@
        (proto (if no-ssl "http" "https")))
   ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
   (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+  (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
   (when (< emacs-major-version 24)
     ;; For important compatibility libraries like cl-lib
     (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
 (package-initialize)
 
-(setq custom-package-list '(github-modern-theme elpy company))
+(setq custom-package-list '(github-modern-theme elpy company spacemacs-theme))
 (unless package-archive-contents
   (package-refresh-contents))
 ; install the missing packages
@@ -58,19 +59,35 @@
   (unless (package-installed-p package)
     (package-install package)))
 
-;; color theme -- github-modern
-(when (>= emacs-major-version 24)
-  (load-theme 'github-modern t))
+;; loading local settings
+(add-to-list 'load-path "~/.emacs.d/local-lisp/")
+(load "local-settings.el")
 
+;; color theme -- spacemacs, light or dark based on current time of day
+(when (>= emacs-major-version 24)
+  (let ((current-hour (string-to-number (substring (current-time-string) 11 13))))
+	(if (and (>= current-hour 9) (< current-hour 18))
+		(load-theme 'spacemacs-light t)
+	  (load-theme 'spacemacs-dark t))))
+
+;; elpy settings
 (elpy-enable)
+(setq python-shell-interpreter "jupyter"
+      python-shell-interpreter-args "console --simple-prompt"
+      python-shell-prompt-detect-failure-warning nil)
+(add-to-list 'python-shell-completion-native-disabled-interpreters
+             "jupyter")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default-input-method "russian-computer")
  '(inhibit-startup-screen t)
- '(package-selected-packages (quote (melancholy-theme elpy company github-modern-theme)))
+ '(package-selected-packages
+   (quote
+	(spacemacs-theme magit markdown-mode melancholy-theme elpy company github-modern-theme spacemacs-theme)))
  '(safe-local-variable-values (quote ((tab-indent-mode . t)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
