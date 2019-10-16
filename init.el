@@ -17,9 +17,9 @@
 (defvaralias 'c-basic-offset 'tab-width)
 (add-hook 'python-mode-hook
       (lambda ()
-        (setq indent-tabs-mode t)
-        (setq tab-width 2)
-        (setq python-indent-offset 2)))
+        (setq indent-tabs-mode nil)
+        (setq tab-width 4)
+        (setq python-indent-offset 4)))
 
 ;; hook for c++ mode
 (defun my-c++-mode-hook ()
@@ -32,6 +32,8 @@
 
 ;; treat .h files as c++ 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+;; treat .m files as Octave
+(add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode))
 ;; special keys
 (global-set-key "\C-cl" 'goto-line)
 
