@@ -9,6 +9,9 @@
 (global-hl-line-mode 1)
 (show-paren-mode 1)
 
+(setq default-input-method "russian-computer")
+(setq inhibit-startup-screen t)
+
 ;; coding style
 (setq-default c-default-style "ellemtel"
       c-basic-offset 4
@@ -49,17 +52,10 @@
     (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
 (package-initialize)
 
-(setq custom-package-list '(github-modern-theme elpy company spacemacs-theme))
-(unless package-archive-contents
-  (package-refresh-contents))
-; install the missing packages
-(dolist (package custom-package-list)
-  (unless (package-installed-p package)
-    (package-install package)))
-
-;; loading local settings
-(add-to-list 'load-path "~/.emacs.d/local-lisp/")
-(load "local-settings.el")
+;; selected packages
+(setq package-selected-packages
+	  '(flymake spacemacs-theme magit markdown-mode elpy company))
+(package-install-selected-packages)
 
 ;; color theme -- spacemacs, light or dark based on current time of day
 (when (>= emacs-major-version 24)
@@ -76,21 +72,13 @@
 (add-to-list 'python-shell-completion-native-disabled-interpreters
              "jupyter")
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default-input-method "russian-computer")
- '(inhibit-startup-screen t)
- '(package-selected-packages
-   (quote
-	(spacemacs-theme magit markdown-mode melancholy-theme elpy company github-modern-theme spacemacs-theme)))
- '(safe-local-variable-values (quote ((tab-indent-mode . t)))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+;; org-mode settings
+(setq org-log-done t)
+
+;; loading local settings
+(add-to-list 'load-path "~/.emacs.d/local-lisp/")
+(load "local-settings.el")
+
+;; set custom file for Customize but never load it
+(setq custom-file "~/.emacs.d/local-lisp/custom.el")
 
