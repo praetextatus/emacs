@@ -1,11 +1,11 @@
 ;; my emacs customizing
 
-(menu-bar-mode 1)
+(menu-bar-mode 0)
 (tool-bar-mode 0)
-(set-scroll-bar-mode 'right)
+(set-scroll-bar-mode 'nil)
 
 ;; Better looks
-(global-linum-mode 1)
+(global-linum-mode 0)
 (global-hl-line-mode 1)
 (show-paren-mode 1)
 
@@ -37,9 +37,11 @@
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 ;; treat .m files as Octave
 (add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode))
+
 ;; special keys
 (global-set-key "\C-cl" 'goto-line)
 (global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-c a") 'org-agenda)
 
 ;; packages
 (require 'package)
@@ -83,4 +85,3 @@
 
 ;; set custom file for Customize but never load it
 (setq custom-file "~/.emacs.d/local-lisp/custom.el")
-
