@@ -70,11 +70,13 @@
 
 ;; elpy settings
 (elpy-enable)
-(setq python-shell-interpreter "jupyter"
-      python-shell-interpreter-args "console --simple-prompt"
-      python-shell-prompt-detect-failure-warning nil)
-(add-to-list 'python-shell-completion-native-disabled-interpreters
-             "jupyter")
+(let ((python-interpreter "ipython")
+	  (python-args "-i --simple-prompt"))
+  (setq python-shell-interpreter python-interpreter
+		python-shell-interpreter-args python-args
+		python-shell-prompt-detect-failure-warning nil)
+  (add-to-list 'python-shell-completion-native-disabled-interpreters
+			   python-interpreter))
 
 ;; org-mode settings
 (setq org-log-done t)
