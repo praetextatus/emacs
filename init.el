@@ -84,6 +84,15 @@
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c e") 'better-pyvenv-activate)
 
+;; some Windows-specific options that are not local
+(when (memq system-type '(windows-nt ms-dos))
+  ;; tramp for windows
+  (setq tramp-default-method "plink")
+  ;; fonts
+  (set-face-attribute 'default nil
+					  :font "Source Code Pro")
+  ;; git ask password in gui (for windows)
+  (setenv "GIT_ASKPASS" "git-gui--askpass"))
 
 ;; loading local settings
 (add-to-list 'load-path "~/.emacs.d/local-lisp/")
