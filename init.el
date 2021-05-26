@@ -1,11 +1,10 @@
 ;; my emacs customizing
 
-(menu-bar-mode 1)
-(tool-bar-mode 0)
-(set-scroll-bar-mode 'right)
-
 ;; Better looks
-(global-linum-mode 1)
+(menu-bar-mode 0)
+(tool-bar-mode 0)
+(set-scroll-bar-mode 'nil)
+(global-linum-mode 0)
 (global-hl-line-mode 1)
 (show-paren-mode 1)
 
@@ -20,9 +19,9 @@
 (defvaralias 'c-basic-offset 'tab-width)
 (add-hook 'python-mode-hook
       (lambda ()
-        (setq indent-tabs-mode t)
-        (setq tab-width 2)
-        (setq python-indent-offset 2)))
+        (setq indent-tabs-mode nil)
+        (setq tab-width 4)
+        (setq python-indent-offset 4)))
 
 ;; hook for c++ mode
 (defun my-c++-mode-hook ()
