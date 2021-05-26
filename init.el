@@ -34,6 +34,8 @@
 
 ;; treat .h files as c++ 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+;; treat .m files as Octave
+(add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode))
 
 ;; packages
 (require 'package)
