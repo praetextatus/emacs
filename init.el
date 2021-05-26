@@ -37,6 +37,7 @@
 ;; special keys
 (global-set-key "\C-cl" 'goto-line)
 (global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-c a") 'org-agenda)
 
 ;; packages
 (require 'package)
