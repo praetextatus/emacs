@@ -34,10 +34,6 @@
 
 ;; treat .h files as c++ 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
-;; special keys
-(global-set-key "\C-cl" 'goto-line)
-(global-set-key (kbd "C-x g") 'magit-status)
-(global-set-key (kbd "C-c a") 'org-agenda)
 
 ;; packages
 (require 'package)
@@ -57,6 +53,10 @@
 	  '(flymake spacemacs-theme magit markdown-mode elpy company))
 (package-install-selected-packages)
 
+;; custom packages
+(add-to-list 'load-path "~/.emacs.d/custom-pkgs")
+(load "better-pyvenv-activate.el")
+
 ;; color theme -- spacemacs, light or dark based on current time of day
 (when (>= emacs-major-version 24)
   (let ((current-hour (string-to-number (substring (current-time-string) 11 13))))
@@ -74,6 +74,16 @@
 
 ;; org-mode settings
 (setq org-log-done t)
+(setq org-todo-keywords
+	  '((sequence "TODO" "|" "DONE")
+		(sequence "|" "CANCELLED")))
+
+;; special keys
+(global-set-key (kbd "C-c l") 'goto-line)
+(global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c e") 'better-pyvenv-activate)
+
 
 ;; loading local settings
 (add-to-list 'load-path "~/.emacs.d/local-lisp/")
