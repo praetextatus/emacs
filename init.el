@@ -16,6 +16,10 @@
 (setq ido-everywhere t)
 (ido-mode 1)
 
+;; more lenient garbage collection
+(setq gc-cons-threshold-original gc-cons-threshold)
+(setq gc-cons-threshold (* 1024 1024 64))  ; set GC threshold to 64Mb -- should be fine
+
 ;; coding style
 (setq-default c-default-style "ellemtel"
       c-basic-offset 4
