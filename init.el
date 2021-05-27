@@ -11,6 +11,11 @@
 (setq default-input-method "russian-computer")
 (setq inhibit-startup-screen t)
 
+;; ido mode
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode 1)
+
 ;; coding style
 (setq-default c-default-style "ellemtel"
       c-basic-offset 4
