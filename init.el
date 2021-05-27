@@ -91,6 +91,9 @@
 	  '((sequence "TODO" "|" "DONE")
 		(sequence "|" "CANCELLED")))
 
+;; dired settings
+(setq dired-listing-switches "-alh")
+
 ;; special keys
 (global-set-key (kbd "C-c l") 'goto-line)
 (global-set-key (kbd "C-x g") 'magit-status)
