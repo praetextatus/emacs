@@ -11,14 +11,36 @@
 (setq default-input-method "russian-computer")
 (setq inhibit-startup-screen t)
 
-;; ido mode
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode 1)
-
 ;; more lenient garbage collection
 (setq gc-cons-threshold-original gc-cons-threshold)
 (setq gc-cons-threshold (* 1024 1024 64))  ; set GC threshold to 64Mb -- should be fine
+
+;; loading local settings
+(add-to-list 'load-path "~/.emacs.d/local-lisp/")
+(load "local-settings.el")
+
+;; packages
+(require 'package)
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (proto (if no-ssl "http" "https")))
+  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
+  (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+  (when (< emacs-major-version 24)
+    ;; For important compatibility libraries like cl-lib
+    (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
+(setq package-archive-priorities
+	  '(("melpa-stable" . 10)
+		("gnu" . 5)
+		("melpa" . 0)))
+(package-initialize)
+
+;; selected packages
+(setq common-package-selected-packages
+	  '(flymake spacemacs-theme magit markdown-mode elpy company))
+(setq package-selected-packages (append common-package-selected-packages local-selected-packages))
+(package-install-selected-packages)
 
 ;; coding style
 (setq-default c-default-style "ellemtel"
@@ -45,24 +67,6 @@
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 ;; treat .m files as Octave
 (add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode))
-
-;; packages
-(require 'package)
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (proto (if no-ssl "http" "https")))
-  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
-  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-  (when (< emacs-major-version 24)
-    ;; For important compatibility libraries like cl-lib
-    (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
-(package-initialize)
-
-;; selected packages
-(setq package-selected-packages
-	  '(flymake spacemacs-theme magit markdown-mode elpy company))
-(package-install-selected-packages)
 
 ;; custom packages
 (add-to-list 'load-path "~/.emacs.d/custom-pkgs")
@@ -109,10 +113,6 @@
 					  :font "Source Code Pro")
   ;; git ask password in gui (for windows)
   (setenv "GIT_ASKPASS" "git-gui--askpass"))
-
-;; loading local settings
-(add-to-list 'load-path "~/.emacs.d/local-lisp/")
-(load "local-settings.el")
 
 ;; set custom file for Customize but never load it
 (setq custom-file "~/.emacs.d/local-lisp/custom.el")
