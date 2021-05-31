@@ -38,7 +38,7 @@
 
 ;; selected packages
 (setq common-package-selected-packages
-	  '(flymake spacemacs-theme magit markdown-mode elpy company))
+	  '(flymake spacemacs-theme magit markdown-mode elpy company org-bullets))
 (setq package-selected-packages (append common-package-selected-packages local-selected-packages))
 (package-install-selected-packages)
 
@@ -94,6 +94,11 @@
 (setq org-todo-keywords
 	  '((sequence "TODO" "|" "DONE")
 		(sequence "|" "CANCELLED")))
+(setq org-hide-emphasis-markers t)
+(add-hook 'org-mode-hook
+		  (lambda ()
+			(visual-line-mode)
+			(org-bullets-mode)))
 
 ;; dired settings
 (setq dired-listing-switches "-alh")
