@@ -117,7 +117,20 @@
   (set-face-attribute 'default nil
 					  :font "Source Code Pro")
   ;; git ask password in gui (for windows)
-  (setenv "GIT_ASKPASS" "git-gui--askpass"))
+  (setenv "GIT_ASKPASS" "git-gui--askpass")
+  ;; ido mode -- selectrum doesn't work in windows
+  (setq ido-enable-flex-matching t)
+  (setq ido-everywhere t)
+  (ido-mode 1)
+  ;; coding
+  (set-coding-system-priority 'utf-8 'utf-16 'windows-1251 'cp1251-dos)
+  ;; Prevent issues with the Windows null device (NUL)
+  ;; when using cygwin find with rgrep.
+  (defadvice grep-compute-defaults (around grep-compute-defaults-advice-null-device)
+	"Use cygwin's /dev/null as the null-device."
+	(let ((null-device "/dev/null"))
+	  ad-do-it))
+  (ad-activate 'grep-compute-defaults))  
 
 ;; set custom file for Customize but never load it
 (setq custom-file "~/.emacs.d/local-lisp/custom.el")
