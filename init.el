@@ -11,15 +11,16 @@
 (setq default-input-method "russian-computer")
 (setq inhibit-startup-screen t)
 
+;; never put tabs
+(setq-default indent-tabs-mode nil)
+
 ;; more lenient garbage collection
 (setq gc-cons-threshold-original gc-cons-threshold)
 (setq gc-cons-threshold (* 1024 1024 64))  ; set GC threshold to 64Mb -- should be fine
 
-;; loading local settings
-(add-to-list 'load-path "~/.emacs.d/local-lisp/")
-(load "local-settings.el")
+;;;;;;;; PACKAGES ;;;;;;;;
 
-;; packages
+;; elpa config
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                     (not (gnutls-available-p))))
@@ -31,105 +32,180 @@
     ;; For important compatibility libraries like cl-lib
     (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
 (setq package-archive-priorities
-	  '(("melpa-stable" . 10)
-		("gnu" . 5)
-		("melpa" . 0)))
+      '(("melpa-stable" . 10)
+        ("gnu" . 5)
+        ("melpa" . 0)))
 (package-initialize)
 
-;; selected packages
-(setq common-package-selected-packages
-	  '(flymake spacemacs-theme magit markdown-mode elpy company org-bullets))
-(setq package-selected-packages (append common-package-selected-packages local-selected-packages))
-(package-install-selected-packages)
+;; use use-package
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+(require 'use-package)
 
-;; coding style
-(setq-default c-default-style "ellemtel"
-      c-basic-offset 4
-      tab-width 4
-      tab-indent-mode t)
-(defvaralias 'c-basic-offset 'tab-width)
-(add-hook 'python-mode-hook
-      (lambda ()
-        (setq indent-tabs-mode nil)
-        (setq tab-width 4)
-        (setq python-indent-offset 4)))
+;; magit
+(use-package magit
+  :ensure t
+  :bind ("C-x g" . magit-status))
 
-;; hook for c++ mode
-(defun my-c++-mode-hook ()
-  (define-key c++-mode-map [?\C-c ?\C-c] 'compile)
-  (define-key c++-mode-map [?\C-c d]   'gdb)
-  (c-set-offset 'access-label '0)
-  (c-set-offset 'inclass '+)
-  (auto-complete-mode))
-(add-hook 'c++-mode-hook 'my-c++-mode-hook)
+(use-package lsp-mode
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-c p")
+  :ensure t
+  :hook ((python-mode . lsp))
+  :commands lsp)
+(use-package lsp-ui
+  :ensure t)
 
-;; treat .h files as c++ 
-(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+;; various packages
+(use-package company
+  :ensure t)
+(use-package org-bullets
+  :ensure t)
+(use-package markdown-mode
+  :ensure t)
+(use-package flymake
+  :ensure t)
+(use-package dockerfile-mode
+  :ensure t)
+
+
+;;;;;;;; PERSONAL SETTINGS ;;;;;;;;
+(let* ((my/settings-file
+        (if (file-exists-p "~/.emacs.d/local-lisp/my-settings.el")
+            "~/.emacs.d/local-lisp/my-settings.el"
+          "~/.emacs.d/local-lisp/my-settings-template.el")))
+  (load my/settings-file))
+
+;; Theme
+(load-theme (my/get-theme my/current-theme) t)
+
+;; Fonts
+(let ((font-attributes '(:family :weight :height :width)))
+  (dolist (attribute font-attributes)
+    (set-face-attribute 'default nil
+                        attribute (plist-get (cdr my/font) attribute))))
+
+;; org-mode
+(use-package org
+  :init
+  (setq org-log-done t)
+  (setq org-todo-keywords
+        '((sequence "TODO" "|" "DONE")
+          (sequence "|" "CANCELLED")))
+  (setq org-hide-emphasis-markers t)
+
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (visual-line-mode)
+              (org-bullets-mode)))
+
+  (setq org-agenda-files (plist-get (cdr my/org-config) :org-agenda-files))
+  (setq org-default-notes-file (plist-get (cdr my/org-config) :org-default-note-files))
+
+  :bind
+  ("C-c a" . org-agenda))
+
+;; Selectrum
+(use-package selectrum
+  :if (eq system-type 'gnu/linux)
+  :ensure t
+  :init
+  (add-hook 'after-init-hook (lambda () (selectrum-mode +1))))
+(use-package selectrum-prescient
+  :if (eq system-type 'gnu/linux)
+  :ensure t
+  :init
+  (add-hook 'after-init-hook (lambda () (selectrum-prescient-mode +1))))
+
+;;;;;;;; MAIL ;;;;;;;;
+
+;; mu4e
+(use-package mu4e
+  :bind ("C-c m" . mu4e)
+  :config
+  ;; general mu4e config
+  (setq
+   mail-user-agent                  'mu4e-user-agent
+   mu4e-get-mail-command            "mbsync -a"
+   mu4e-update-interval             600
+   user-mail-address                my/user-mail-address
+   user-full-name                   my/user-full-name
+   mu4e-view-show-images            t
+   mu4e-sent-messages-behavior      'delete)
+  ;; headers fields
+  (setq mu4e-headers-fields '((:human-date . 12)
+                              (:maildir . 12)
+                              (:flags . 6)
+                              (:from . 22)
+                              (:subject)))
+  ;; Gmail send (smtp) config
+  (when my/gmail-smtp
+      (setq
+       message-send-mail-function    'smtpmail-send-it
+       smtpmail-default-smtp-server  "smtp.gmail.com"
+       smtpmail-smtp-server          "smtp.gmail.com"
+       smtpmail-local-domain         "gmail.com"
+       smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+       smtpmail-smtp-service         587
+       starttls-extra-arguments      nil
+       starttls-gnutls-program       "gnutls-cli"
+       starttls-extra-arguments      nil
+       starttls-use-gnutls           t)))
+
+
+;;;;;;;; CODING ;;;;;;;;
+(use-package python
+  :init
+  (add-hook 'python-mode-hook
+            (lambda ()
+              (setq indent-tabs-mode nil)
+              (setq tab-width 4)
+              (setq python-indent-offset 4))))
+
+
+(use-package cc-mode
+  :init
+  (add-hook 'c++-mode-hook
+            (lambda ()
+              (define-key c++-mode-map [?\C-c ?\C-c] 'compile)
+              (define-key c++-mode-map [?\C-c d]   'gdb)
+              (c-set-offset 'access-label '0)
+              (c-set-offset 'inclass '+)
+              (auto-complete-mode)))
+  :mode ("\\.h\\'" . c++-mode))
+
 ;; treat .m files as Octave
 (add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode))
 
-;; custom packages
-(add-to-list 'load-path "~/.emacs.d/custom-pkgs")
-(load "better-pyvenv-activate.el")
-
-;; color theme -- spacemacs, light or dark based on current time of day
-(when (>= emacs-major-version 24)
-  (let ((current-hour (string-to-number (substring (current-time-string) 11 13))))
-	(if (and (>= current-hour 9) (< current-hour 18))
-		(load-theme 'spacemacs-light t)
-	  (load-theme 'spacemacs-dark t))))
-
-;; elpy settings
-(elpy-enable)
-(let ((python-interpreter "ipython")
-	  (python-args "-i --simple-prompt"))
-  (setq python-shell-interpreter python-interpreter
-		python-shell-interpreter-args python-args
-		python-shell-prompt-detect-failure-warning nil)
-  (add-to-list 'python-shell-completion-native-disabled-interpreters
-			   python-interpreter))
-
-;; org-mode settings
-(setq org-log-done t)
-(setq org-todo-keywords
-	  '((sequence "TODO" "|" "DONE")
-		(sequence "|" "CANCELLED")))
-(setq org-hide-emphasis-markers t)
-(add-hook 'org-mode-hook
-		  (lambda ()
-			(visual-line-mode)
-			(org-bullets-mode)))
-
-;; dired settings
+;;;;;;;; DIRED ;;;;;;;;
 (setq dired-listing-switches "-alh")
 
-;; special keys
+
+;;;;;;;; SPECIAL KEYS ;;;;;;;;
 (global-set-key (kbd "C-c l") 'goto-line)
-(global-set-key (kbd "C-x g") 'magit-status)
-(global-set-key (kbd "C-c a") 'org-agenda)
-(global-set-key (kbd "C-c e") 'better-pyvenv-activate)
+
+
+;;;;;;;; WINDOWS ;;;;;;;;
 
 ;; some Windows-specific options that are not local
 (when (memq system-type '(windows-nt ms-dos))
   ;; tramp for windows
   (setq tramp-default-method "plink")
-  ;; fonts
-  (set-face-attribute 'default nil
-					  :font "Source Code Pro")
   ;; git ask password in gui (for windows)
   (setenv "GIT_ASKPASS" "git-gui--askpass")
   ;; ido mode -- selectrum doesn't work in windows
   (setq ido-enable-flex-matching t)
   (setq ido-everywhere t)
   (ido-mode 1)
-  ;; coding
+  ;; encoding
   (set-coding-system-priority 'utf-8 'utf-16 'windows-1251 'cp1251-dos)
   ;; Prevent issues with the Windows null device (NUL)
   ;; when using cygwin find with rgrep.
   (defadvice grep-compute-defaults (around grep-compute-defaults-advice-null-device)
-	"Use cygwin's /dev/null as the null-device."
-	(let ((null-device "/dev/null"))
-	  ad-do-it))
+    "Use cygwin's /dev/null as the null-device."
+    (let ((null-device "/dev/null"))
+      ad-do-it))
   (ad-activate 'grep-compute-defaults))  
 
 ;; set custom file for Customize but never load it
