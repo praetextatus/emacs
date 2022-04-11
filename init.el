@@ -68,6 +68,8 @@
   :ensure t)
 (use-package dockerfile-mode
   :ensure t)
+(use-package which-key
+  :ensure t)
 
 
 ;;;;;;;; PERSONAL SETTINGS ;;;;;;;;
