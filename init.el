@@ -54,8 +54,6 @@
   :ensure t
   :hook ((python-mode . lsp))
   :commands lsp)
-(use-package lsp-ui
-  :ensure t)
 
 ;; various packages
 (use-package company
@@ -70,6 +68,11 @@
   :ensure t)
 (use-package which-key
   :ensure t)
+
+;;;;;;;;;;;;;; IDO ;;;;;;;;;;;;;;;;
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode 1)
 
 
 ;;;;;;;; PERSONAL SETTINGS ;;;;;;;;
@@ -103,22 +106,10 @@
               (org-bullets-mode)))
 
   (setq org-agenda-files (plist-get (cdr my/org-config) :org-agenda-files))
-  (setq org-default-notes-file (plist-get (cdr my/org-config) :org-default-note-files))
+  (setq org-default-notes-file (plist-get (cdr my/org-config) :org-default-notes-file))
 
   :bind
   ("C-c a" . org-agenda))
-
-;; Selectrum
-(use-package selectrum
-  :if (eq system-type 'gnu/linux)
-  :ensure t
-  :init
-  (add-hook 'after-init-hook (lambda () (selectrum-mode +1))))
-(use-package selectrum-prescient
-  :if (eq system-type 'gnu/linux)
-  :ensure t
-  :init
-  (add-hook 'after-init-hook (lambda () (selectrum-prescient-mode +1))))
 
 ;;;;;;;; MAIL ;;;;;;;;
 
@@ -196,10 +187,6 @@
   (setq tramp-default-method "plink")
   ;; git ask password in gui (for windows)
   (setenv "GIT_ASKPASS" "git-gui--askpass")
-  ;; ido mode -- selectrum doesn't work in windows
-  (setq ido-enable-flex-matching t)
-  (setq ido-everywhere t)
-  (ido-mode 1)
   ;; encoding
   (set-coding-system-priority 'utf-8 'utf-16 'windows-1251 'cp1251-dos)
   ;; Prevent issues with the Windows null device (NUL)
@@ -208,7 +195,20 @@
     "Use cygwin's /dev/null as the null-device."
     (let ((null-device "/dev/null"))
       ad-do-it))
-  (ad-activate 'grep-compute-defaults))  
+  (ad-activate 'grep-compute-defaults))
 
+;; WSL
+(when (eq system-type 'windows-nt)
+    (defun fp/ignore-wsl-acls (orig-fun &rest args)
+      "Ignore ACLs on WSL. WSL does not provide an ACL, but emacs
+expects there to be one before saving any file. Without this
+advice, files on WSL can not be saved."
+      (if (string-match-p "^//wsl\$/" (car args))
+          (progn (message "ignoring wsl acls") "")
+        (apply orig-fun args)))
+
+    (advice-add 'file-acl :around 'fp/ignore-wsl-acls))
+
+;;;;;;;; CUSTOM ;;;;;;;;
 ;; set custom file for Customize but never load it
 (setq custom-file "~/.emacs.d/local-lisp/custom.el")
