@@ -68,6 +68,8 @@
   :ensure t)
 (use-package which-key
   :ensure t)
+(use-package emojify
+  :ensure t)
 
 ;;;;;;;;;;;;;; IDO ;;;;;;;;;;;;;;;;
 (setq ido-enable-flex-matching t)
