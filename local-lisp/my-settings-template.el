@@ -32,7 +32,9 @@
 (setq my/org-config
       '("org-mode"
         :org-agenda-files nil
-        :org-default-notes-file org-default-notes-file))
+        :org-default-notes-file org-default-notes-file
+        :org-work-tasks-file nil
+        :org-personal-tasks-file nil))
 
 ;; Mail
 (setq

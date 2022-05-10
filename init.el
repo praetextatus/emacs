@@ -105,8 +105,18 @@
   (setq org-agenda-files (plist-get (cdr my/org-config) :org-agenda-files))
   (setq org-default-notes-file (plist-get (cdr my/org-config) :org-default-note-files))
 
+  ;; org-capture
+  (setq org-capture-templates
+      `(("t" "Todo (work)" entry (file+headline ,(plist-get (cdr my/org-config) :org-work-tasks-file) "Tasks")
+         "* TODO %?\n  %i\n  %a")
+        ("m" "Meeting (work)" entry (file+headline ,(plist-get (cdr my/org-config) :org-work-tasks-file) "Meetings")
+         "* %?\n  %^T\n %a")
+        ("p" "Todo (personal)" entry (file+headline ,(plist-get (cdr my/org-config) :org-personal-tasks-file) "Tasks")
+         ("* TODO %?\n %i\n %a"))))
+
   :bind
-  ("C-c a" . org-agenda))
+  ("C-c a" . org-agenda)
+  ("C-c t" . org-capture))
 
 ;; Selectrum
 (use-package selectrum
