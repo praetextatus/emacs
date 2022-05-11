@@ -71,10 +71,15 @@
 (use-package emojify
   :ensure t)
 
-;;;;;;;;;;;;;; IDO ;;;;;;;;;;;;;;;;
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode 1)
+;;;;;;;;;; COMPLETION ;;;;;;;;;;
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+(icomplete-mode t)
+
 
 ;;;;;;;; PERSONAL SETTINGS ;;;;;;;;
 (let* ((my/settings-file
@@ -114,7 +119,7 @@
       `(("t" "Todo (work)" entry (file+headline ,(plist-get (cdr my/org-config) :org-work-tasks-file) "Tasks")
          "* TODO %?\n  %i\n  %a")
         ("m" "Meeting (work)" entry (file+headline ,(plist-get (cdr my/org-config) :org-work-tasks-file) "Meetings")
-         "* %?\n  %^T\n %a")
+         "* %? %^G\n %^T\n")
         ("p" "Todo (personal)" entry (file+headline ,(plist-get (cdr my/org-config) :org-personal-tasks-file) "Tasks")
          ("* TODO %?\n %i\n %a"))))
 
