@@ -78,8 +78,10 @@
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
-(icomplete-mode t)
-
+(use-package vertico
+  :ensure t
+  :init
+  (vertico-mode))
 
 ;;;;;;;; PERSONAL SETTINGS ;;;;;;;;
 (let* ((my/settings-file
@@ -193,7 +195,6 @@
 
 ;;;;;;;; SPECIAL KEYS ;;;;;;;;
 (global-set-key (kbd "C-c l") 'goto-line)
-
 
 ;;;;;;;; WINDOWS ;;;;;;;;
 
