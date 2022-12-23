@@ -123,7 +123,11 @@
         ("m" "Meeting (work)" entry (file+headline ,(plist-get (cdr my/org-config) :org-work-tasks-file) "Meetings")
          "* %? %^G\n %^T\n")
         ("p" "Todo (personal)" entry (file+headline ,(plist-get (cdr my/org-config) :org-personal-tasks-file) "Tasks")
-         ("* TODO %?\n %i\n %a"))))
+         ("* TODO %?\n %i\n %a"))
+        ("s" "Stuff" entry (file ,(plist-get (cdr my/org-config) :org-inbox-file))
+         "* %?\n %U")
+        ("j" "Journal" entry (file+datetree ,(plist-get (cdr my/org-config) :org-journal-file))
+         "* %?\n")))
 
   :bind
   ("C-c a" . org-agenda)

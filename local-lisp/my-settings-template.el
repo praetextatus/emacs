@@ -35,6 +35,7 @@
         :org-default-notes-file org-default-notes-file
         :org-work-tasks-file nil
         :org-personal-tasks-file nil
+        :org-journal-file nil
         :org-roam-directory nil))
 
 ;; Mail
