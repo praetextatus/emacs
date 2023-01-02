@@ -71,6 +71,8 @@
 (use-package emojify
   :ensure t)
 
+(which-key-mode)
+
 ;;;;;;;;;; COMPLETION ;;;;;;;;;;
 (use-package orderless
   :ensure t
