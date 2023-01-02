@@ -58,7 +58,7 @@
 ;; various packages
 (use-package company
   :ensure t)
-(use-package org-bullets
+(use-package org-superstar
   :ensure t)
 (use-package markdown-mode
   :ensure t)
@@ -111,7 +111,7 @@
   (add-hook 'org-mode-hook
             (lambda ()
               (visual-line-mode)
-              (org-bullets-mode)))
+              (org-superstar-mode)))
 
   (setq org-agenda-files (plist-get (cdr my/org-config) :org-agenda-files))
   (setq org-default-notes-file (plist-get (cdr my/org-config) :org-default-notes-file))
