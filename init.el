@@ -113,11 +113,14 @@
         '((sequence "TODO" "|" "DONE")
           (sequence "|" "CANCELLED")))
   (setq org-hide-emphasis-markers t)
+  (setq org-ellipsis " …")
 
   (add-hook 'org-mode-hook
             (lambda ()
               (visual-line-mode)
-              (org-superstar-mode)))
+              (org-superstar-mode)
+              (setq cursor-type 'bar)
+              (variable-pitch-mode)))
 
   (setq org-agenda-files (plist-get (cdr my/org-config) :org-agenda-files))
   (setq org-default-notes-file (plist-get (cdr my/org-config) :org-default-notes-file))
