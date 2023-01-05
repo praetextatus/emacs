@@ -96,10 +96,14 @@
 (load-theme (my/get-theme my/current-theme) t)
 
 ;; Fonts
-(let ((font-attributes '(:family :weight :height :width)))
+(let ((font-attributes '(:family :weight :height :width))
+      (font-settings '(my/font my/variable-pitch)))
   (dolist (attribute font-attributes)
-    (set-face-attribute 'default nil
-                        attribute (plist-get (cdr my/font) attribute))))
+    (dolist (settings font-settings)
+      (let ((attribute-value (plist-get (cdr (eval settings)) attribute))
+            (face (plist-get (cdr (eval settings)) :face)))
+        (if attribute-value
+            (set-face-attribute face nil attribute attribute-value))))))
 
 ;; org-mode
 (use-package org

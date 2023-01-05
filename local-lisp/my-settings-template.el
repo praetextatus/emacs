@@ -23,10 +23,16 @@
 ;; Fonts
 (setq my/font
       '("font"
+        :face default
         :family "Hack"
         :weight normal
         :width normal
         :height 100))
+
+(setq my/variable-pitch
+      '("variable pitch face"
+        :face variable-pitch
+        :family "Noto Sans"))
 
 ;; org-mode
 (setq my/org-config
