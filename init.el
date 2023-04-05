@@ -5,7 +5,7 @@
 (tool-bar-mode 0)
 (set-scroll-bar-mode 'nil)
 (global-linum-mode 0)
-(global-hl-line-mode 1)
+(global-hl-line-mode 0)
 (show-paren-mode 1)
 
 (setq default-input-method "russian-computer")
@@ -120,7 +120,10 @@
               (visual-line-mode)
               (org-superstar-mode)
               (setq cursor-type 'bar)
-              (variable-pitch-mode)))
+              (variable-pitch-mode)
+              (dolist (face org-level-faces)
+                (unless (eq face 'org-level-1)
+                  (set-face-attribute face nil :weight 'normal)))))
 
   (setq org-agenda-files (plist-get (cdr my/org-config) :org-agenda-files))
   (setq org-default-notes-file (plist-get (cdr my/org-config) :org-default-notes-file))
