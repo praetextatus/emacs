@@ -18,6 +18,9 @@
 (setq gc-cons-threshold-original gc-cons-threshold)
 (setq gc-cons-threshold (* 1024 1024 64))  ; set GC threshold to 64Mb -- should be fine
 
+;; read more from the process (> 4k)
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
+
 ;;;;;;;; PACKAGES ;;;;;;;;
 
 ;; elpa config
