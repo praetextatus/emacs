@@ -3,8 +3,8 @@
 ;; Themes
 (defvar my/themes
       '("themes"
-        :light spacemacs-light
-        :dark spacemacs-dark))
+        :light tango
+        :dark deeper-blue))
 
 (defvar my/current-theme :dark)
 
