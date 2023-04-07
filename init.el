@@ -62,6 +62,8 @@
   :ensure t)
 (use-package lsp-ui
   :ensure t)
+(use-package pyvenv
+  :ensure t)
 
 ;; various packages
 (use-package company
