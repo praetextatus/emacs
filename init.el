@@ -94,11 +94,12 @@
   (vertico-mode))
 
 ;;;;;;;; PERSONAL SETTINGS ;;;;;;;;
-(let* ((my/settings-file
-        (if (file-exists-p "~/.emacs.d/local-lisp/my-settings.el")
-            "~/.emacs.d/local-lisp/my-settings.el"
-          "~/.emacs.d/local-lisp/my-settings-template.el")))
-  (load my/settings-file))
+(let* ((my/settings-base-file "~/.emacs.d/local-lisp/my-settings-template.el")
+       (my/settings-overload-file "~/.emacs.d/local-lisp/my-settings.el"))
+  (load my/settings-base-file)
+  (when (file-exists-p my/settings-overload-file)
+    (load my/settings-overload-file)))
+
 
 ;; Theme
 (load-theme (my/get-theme my/current-theme) t)
