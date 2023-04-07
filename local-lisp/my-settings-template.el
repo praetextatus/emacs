@@ -1,12 +1,12 @@
 ;; Save as my-settings.el and customize
 
 ;; Themes
-(setq my/themes
+(defvar my/themes
       '("themes"
         :light spacemacs-light
         :dark spacemacs-dark))
 
-(setq my/current-theme :dark)
+(defvar my/current-theme :dark)
 
 (defun my/get-theme (theme)
   (plist-get (cdr my/themes) theme))
@@ -21,7 +21,7 @@
   (load-theme (my/get-theme my/current-theme) t))
 
 ;; Fonts
-(setq my/font
+(defvar my/font
       '("font"
         :face default
         :family "Hack"
@@ -29,13 +29,13 @@
         :width normal
         :height 100))
 
-(setq my/variable-pitch
+(defvar my/variable-pitch
       '("variable pitch face"
         :face variable-pitch
         :family "Noto Sans"))
 
 ;; org-mode
-(setq my/org-config
+(defvar my/org-config
       '("org-mode"
         :org-agenda-files nil
         :org-default-notes-file org-default-notes-file
@@ -45,7 +45,14 @@
         :org-roam-directory nil))
 
 ;; Mail
-(setq
- my/user-mail-address  (concat user-login-name "@" system-name)
- my/user-full-name     (user-full-name)
- my/gmail-smtp         nil)
+(defvar
+  my/user-mail-address  (concat user-login-name "@" system-name))
+(defvar
+  my/user-full-name     (user-full-name))
+(defvar
+  my/gmail-smtp         nil)
+
+
+(defun my/set-docplist-attribute (plist attribute value)
+  "Set the VALUE of the ATTRIBUTE of the doc-plist PLIST."
+  (setq plist (plist-put (cdr plist) attribute value)))
