@@ -75,11 +75,11 @@
 (use-package dockerfile-mode
   :ensure t)
 (use-package which-key
-  :ensure t)
+  :ensure t
+  :config
+  (which-key-mode))
 (use-package emojify
   :ensure t)
-
-(which-key-mode)
 
 ;;;;;;;;;; COMPLETION ;;;;;;;;;;
 (use-package orderless
@@ -100,7 +100,6 @@
   (when (file-exists-p my/settings-overload-file)
     (load my/settings-overload-file)))
 
-
 ;; Theme
 (load-theme (my/get-theme my/current-theme) t)
 
@@ -113,6 +112,7 @@
             (face (plist-get (cdr (eval settings)) :face)))
         (if attribute-value
             (set-face-attribute face nil attribute attribute-value))))))
+
 
 ;; org-mode
 (use-package org
