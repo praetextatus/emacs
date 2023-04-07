@@ -154,6 +154,19 @@
   ("C-c a" . org-agenda)
   ("C-c t" . org-capture))
 
+(use-package org-roam
+  :custom
+  (org-roam-directory (plist-get (cdr my/org-config) :org-roam-directory))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n g" . org-roam-graph)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture)
+         ("C-c n t" . org-roam-tag-add))
+  :config
+  (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+  (org-roam-db-autosync-mode))
+
 ;;;;;;;; MAIL ;;;;;;;;
 
 ;; mu4e
