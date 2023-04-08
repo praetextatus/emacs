@@ -65,6 +65,13 @@
 (use-package pyvenv
   :ensure t)
 
+;; tramp
+(use-package docker-tramp
+  :ensure t
+  :config
+  (setq docker-tramp-docker-executable "docker")
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+
 ;; various packages
 (use-package company
   :ensure t)
