@@ -90,6 +90,16 @@
 (use-package emojify
   :ensure t)
 
+;; use tree-sitter
+;; emacs-29 has a built-in tree-sitter
+(when (< emacs-major-version 29)
+  (use-package tree-sitter
+    :ensure t
+    :hook python-mode)
+  (use-package tree-sitter-langs
+    :ensure t))
+
+
 ;;;;;;;;;; COMPLETION ;;;;;;;;;;
 (use-package orderless
   :ensure t
