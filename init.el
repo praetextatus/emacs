@@ -109,7 +109,7 @@
 
 (use-package vertico
   :ensure t
-  :init
+  :config
   (vertico-mode))
 
 ;;;;;;;; PERSONAL SETTINGS ;;;;;;;;
@@ -135,7 +135,7 @@
 
 ;; org-mode
 (use-package org
-  :init
+  :config
   (setq org-log-done t)
   (setq org-todo-keywords
         '((sequence "TODO" "|" "DONE")
