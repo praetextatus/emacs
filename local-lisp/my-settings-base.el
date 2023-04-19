@@ -1,4 +1,5 @@
-;; Save as my-settings.el and customize
+;; Override variables defined in this file
+;; in a separate file my-settings.el.
 
 ;; Themes
 (defvar my/themes
@@ -56,3 +57,5 @@
 (defun my/set-docplist-attribute (plist attribute value)
   "Set the VALUE of the ATTRIBUTE of the doc-plist PLIST."
   (setq plist (plist-put (cdr plist) attribute value)))
+
+(provide 'my-settings-base)

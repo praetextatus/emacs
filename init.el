@@ -21,6 +21,10 @@
 ;; read more from the process (> 4k)
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
+(setq native-comp-async-report-warnings-errors nil)
+(native-compile-async "~/.emacs.d/local-lisp")
+(add-to-list 'load-path "~/.emacs.d/local-lisp")
+(setq load-prefer-newer t)
 ;;;;;;;; PACKAGES ;;;;;;;;
 
 ;; elpa config
@@ -113,11 +117,12 @@
   (vertico-mode))
 
 ;;;;;;;; PERSONAL SETTINGS ;;;;;;;;
-(let* ((my/settings-base-file "~/.emacs.d/local-lisp/my-settings-template.el")
+(let* ((my/settings-base-file "~/.emacs.d/local-lisp/my-settings-base.el")
        (my/settings-overload-file "~/.emacs.d/local-lisp/my-settings.el"))
-  (load my/settings-base-file)
+  (require 'my-settings-base)
   (when (file-exists-p my/settings-overload-file)
-    (load my/settings-overload-file)))
+    (require 'my-settings)))
+
 
 ;; Theme
 (load-theme (my/get-theme my/current-theme) t)
