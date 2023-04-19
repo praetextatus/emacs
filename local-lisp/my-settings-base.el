@@ -15,6 +15,7 @@
 (defun my/toggle-light-dark-theme ()
   "Toggle light or dark theme defined in my/themes"
   (interactive)
+  (disable-theme (my/get-theme my/current-theme))
   (cond ((eq my/current-theme :light)
          (setq my/current-theme :dark))
         ((eq my/current-theme :dark)
