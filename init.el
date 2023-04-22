@@ -99,7 +99,7 @@
 (when (< emacs-major-version 29)
   (use-package tree-sitter
     :ensure t
-    :hook python-mode)
+    :hook (python-mode . tree-sitter-hl-mode))
   (use-package tree-sitter-langs
     :ensure t))
 
