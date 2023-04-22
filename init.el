@@ -14,6 +14,9 @@
 ;; never put tabs
 (setq-default indent-tabs-mode nil)
 
+;; disable bell
+(setq visible-bell t)
+
 ;; more lenient garbage collection
 (setq gc-cons-threshold-original gc-cons-threshold)
 (setq gc-cons-threshold (* 1024 1024 64))  ; set GC threshold to 64Mb -- should be fine
