@@ -14,7 +14,7 @@
 ;; never put tabs
 (setq-default indent-tabs-mode nil)
 
-;; disable bell
+;; disable audible bell
 (setq visible-bell t)
 
 ;; more lenient garbage collection
@@ -132,11 +132,11 @@
 
 ;; Fonts
 (let ((font-attributes '(:family :weight :height :width))
-      (font-settings '(my/font my/variable-pitch)))
+      (font-settings '(my/font my/variable-pitch my/fixed-pitch)))
   (dolist (attribute font-attributes)
     (dolist (settings font-settings)
-      (let ((attribute-value (plist-get (cdr (eval settings)) attribute))
-            (face (plist-get (cdr (eval settings)) :face)))
+      (let ((attribute-value (plist-get (eval settings) attribute))
+            (face (plist-get (eval settings) :face)))
         (if attribute-value
             (set-face-attribute face nil attribute attribute-value))))))
 
@@ -156,25 +156,22 @@
               (visual-line-mode)
               (org-superstar-mode)
               (setq cursor-type 'bar)
-              (variable-pitch-mode)
-              (dolist (face org-level-faces)
-                (unless (eq face 'org-level-1)
-                  (set-face-attribute face nil :weight 'normal)))))
+              (org-indent-mode)))
 
-  (setq org-agenda-files (plist-get (cdr my/org-config) :org-agenda-files))
-  (setq org-default-notes-file (plist-get (cdr my/org-config) :org-default-notes-file))
+  (setq org-agenda-files (plist-get my/org-config :org-agenda-files))
+  (setq org-default-notes-file (plist-get my/org-config :org-default-notes-file))
 
   ;; org-capture
   (setq org-capture-templates
-      `(("t" "Todo (work)" entry (file+headline ,(plist-get (cdr my/org-config) :org-work-tasks-file) "Tasks")
+      `(("t" "Todo (work)" entry (file+headline ,(plist-get my/org-config :org-work-tasks-file) "Tasks")
          "* TODO %?\n  %i\n  %a")
-        ("m" "Meeting (work)" entry (file+headline ,(plist-get (cdr my/org-config) :org-work-tasks-file) "Meetings")
-         "* %? %^G\n %^T\n")
-        ("p" "Todo (personal)" entry (file+headline ,(plist-get (cdr my/org-config) :org-personal-tasks-file) "Tasks")
+        ("m" "Meeting (work)" entry (file+headline ,(plist-get my/org-config :org-work-tasks-file) "Meetings")
+         "* %? \n%^T\n")
+        ("p" "Todo (personal)" entry (file+headline ,(plist-get my/org-config :org-personal-tasks-file) "Tasks")
          ("* TODO %?\n %i\n %a"))
-        ("s" "Stuff" entry (file ,(plist-get (cdr my/org-config) :org-inbox-file))
+        ("s" "Stuff" entry (file ,(plist-get my/org-config :org-inbox-file))
          "* %?\n %U")
-        ("j" "Journal" entry (file+datetree ,(plist-get (cdr my/org-config) :org-journal-file))
+        ("j" "Journal" entry (file+datetree ,(plist-get my/org-config :org-journal-file))
          "* %?\n")))
 
   :bind
@@ -183,7 +180,7 @@
 
 (use-package org-roam
   :custom
-  (org-roam-directory (plist-get (cdr my/org-config) :org-roam-directory))
+  (org-roam-directory (plist-get my/org-config :org-roam-directory))
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
          ("C-c n g" . org-roam-graph)
