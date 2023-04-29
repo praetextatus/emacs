@@ -41,7 +41,7 @@
 (defvar my/variable-pitch
   '(
     :face variable-pitch
-    :family "Noto Serif")
+    :family "Noto Sans")
   "The plist associating face attributes with attribute values for the `variable-pitch` face")
 
 ;; org-mode

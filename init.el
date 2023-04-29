@@ -145,30 +145,31 @@
 (use-package org
   :config
   (setq org-log-done t)
+  (setq org-startup-indented t)
+  (setq org-image-actual-width 512)
   (setq org-todo-keywords
         '((sequence "TODO" "|" "DONE")
           (sequence "|" "CANCELLED")))
   (setq org-hide-emphasis-markers t)
+  (setq org-pretty-entities t)
   (setq org-ellipsis " …")
 
   (add-hook 'org-mode-hook
             (lambda ()
               (visual-line-mode)
-              (org-superstar-mode)
               (setq cursor-type 'bar)
-              (org-indent-mode)))
+              (variable-pitch-mode)
+              (org-superstar-mode)))
 
   (setq org-agenda-files (plist-get my/org-config :org-agenda-files))
   (setq org-default-notes-file (plist-get my/org-config :org-default-notes-file))
 
   ;; org-capture
   (setq org-capture-templates
-      `(("t" "Todo (work)" entry (file+headline ,(plist-get my/org-config :org-work-tasks-file) "Tasks")
-         "* TODO %?\n  %i\n  %a")
-        ("m" "Meeting (work)" entry (file+headline ,(plist-get my/org-config :org-work-tasks-file) "Meetings")
+      `(("t" "Todo" entry (file ,(plist-get my/org-config :org-inbox-file))
+         "* TODO %?\n")
+        ("m" "Meeting" entry (file+headline ,(plist-get my/org-config :org-inbox-file) "Meetings")
          "* %? \n%^T\n")
-        ("p" "Todo (personal)" entry (file+headline ,(plist-get my/org-config :org-personal-tasks-file) "Tasks")
-         ("* TODO %?\n %i\n %a"))
         ("s" "Stuff" entry (file ,(plist-get my/org-config :org-inbox-file))
          "* %?\n %U")
         ("j" "Journal" entry (file+datetree ,(plist-get my/org-config :org-journal-file))
