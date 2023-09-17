@@ -4,7 +4,8 @@
 (menu-bar-mode 0)
 (tool-bar-mode 0)
 (set-scroll-bar-mode 'nil)
-(global-linum-mode 0)
+(when (< emacs-major-version 29)
+  (global-linum-mode 0))
 (global-hl-line-mode 0)
 (show-paren-mode 1)
 
@@ -74,6 +75,7 @@
 
 ;; tramp
 (use-package docker-tramp
+  :if (< emacs-major-version 29)
   :ensure t
   :config
   (setq docker-tramp-docker-executable "docker")
@@ -98,14 +100,13 @@
   :ensure t)
 
 ;; use tree-sitter
-;; emacs-29 has a built-in tree-sitter
-(when (< emacs-major-version 29)
-  (use-package tree-sitter
-    :ensure t
-    :hook (python-mode . tree-sitter-hl-mode))
-  (use-package tree-sitter-langs
-    :ensure t))
-
+(use-package tree-sitter
+  :if (< emacs-major-version 29)
+  :ensure t
+  :hook (python-mode . tree-sitter-hl-mode))
+(use-package tree-sitter-langs
+  :if (< emacs-major-version 29)
+  :ensure t)
 
 ;;;;;;;;;; COMPLETION ;;;;;;;;;;
 (use-package orderless
@@ -180,6 +181,7 @@
   ("C-c t" . org-capture))
 
 (use-package org-roam
+  :if (< emacs-major-version 29)
   :custom
   (org-roam-directory (plist-get my/org-config :org-roam-directory))
   :bind (("C-c n l" . org-roam-buffer-toggle)
