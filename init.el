@@ -261,6 +261,12 @@
 ;;;;;;;; SPECIAL KEYS ;;;;;;;;
 (global-set-key (kbd "C-c l") 'goto-line)
 
+
+;;;;;;;;;;;;;;;;;;;;;;
+(use-package doc-view
+  :config
+  (setq doc-view-resolution 200))
+
 ;;;;;;;; WINDOWS ;;;;;;;;
 
 ;; some Windows-specific options that are not local
