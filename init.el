@@ -152,7 +152,7 @@
         '((sequence "TODO" "|" "DONE")
           (sequence "|" "CANCELLED")))
   (setq org-hide-emphasis-markers t)
-  (setq org-pretty-entities t)
+  (setq org-pretty-entities nil)
   (setq org-ellipsis " …")
 
   (add-hook 'org-mode-hook
