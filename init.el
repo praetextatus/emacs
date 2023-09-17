@@ -255,8 +255,12 @@
 (add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode))
 
 ;;;;;;;; DIRED ;;;;;;;;
-(setq dired-listing-switches "-alh")
-
+(use-package dired-x
+  :hook (dired-mode . dired-omit-mode)
+  :config
+  (setq dired-listing-switches "-alh")
+  (setq dired-omit-files
+        (concat dired-omit-files "\\|^\\..+$")))
 
 ;;;;;;;; SPECIAL KEYS ;;;;;;;;
 (global-set-key (kbd "C-c l") 'goto-line)
